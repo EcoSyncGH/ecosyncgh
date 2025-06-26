@@ -1,0 +1,64 @@
+# Flutter/Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-versions
+.melos_tool/
+generated_plugin_registrant.dart
+
+# iOS/macOS
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Runner.xcworkspace/
+ios/Pods/
+macos/Flutter/ephemeral/
+macos/Pods/
+macos/Runner.xcworkspace/
+*.xcworkspace
+*.xcuserstate
+DerivedData/
+
+# Android
+android/.gradle/
+android/captures/
+android/.idea/
+*.iml
+*.apk
+*.jks
+*.keystore
+.gradle/
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/misc.xml
+*.log
+
+# Web
+web/.dart_tool/
+web/build/
+
+# Windows/Linux
+windows/Flutter/ephemeral/
+linux/Flutter/ephemeral/
+
+# VS Code
+.vscode/
+
+# JetBrains IDEs (Android Studio, IntelliJ)
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Others
+.env
+*.lock
+*.swp
+*.DS_Store
+Thumbs.db
+*.bak
+*.tmp
