@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -115,30 +117,48 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 30),
 
-                // Botão cadastrar
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // lógica de cadastro
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF678E35),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text(
-                      'Sign up',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+                // Botão Sign up
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: () {
+      // lógica de cadastro
+    },
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF678E35),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 16),
+    ),
+    child: const Text(
+      'Sign up',
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+      ),
+    ),
+  ),
+),
+
+const SizedBox(height: 16),
+
+// Botão de voltar para login
+TextButton(
+  onPressed: () {
+    Navigator.pop(context);
+  },
+  child: const Text(
+    'Já tem uma conta? Entrar',
+    style: TextStyle(
+      decoration: TextDecoration.underline,
+      fontSize: 16,
+      color: Colors.white,
+    ),
+  ),
+),
+
               ],
             ),
           ),
