@@ -16,21 +16,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<Map<String, String>> onboardingData = [
     {
       "title": "O que são Ecopontos?",
-      "description":
+      "text":
           "São locais públicos onde você pode descartar corretamente resíduos recicláveis, eletroeletrônicos, móveis, entulhos e outros materiais, sem prejudicar o meio ambiente.",
-      "image": "assets/images/lixeira.png"
     },
     {
       "title": "Qual nosso objetivo?",
-      "description":
+      "text":
           "A EcoSync deseja poder direcionar você para a localização dos Ecopontos mais próximos, com a descrição de cada um.",
-      "image": "assets/images/lixeira.png"
     },
     {
       "title": "Precisamos da sua localização",
-      "description":
+      "text":
           "Nosso app utiliza a sua localização para oferecer uma experiência completa e personalizada. Com esse acesso, conseguimos mostrar informações relevantes perto de você e garantir que todos os recursos funcionem corretamente.",
-      "image": "assets/images/lixeira.png"
+      "privacy":
+          "Não se preocupe — sua privacidade é importante para nós, e seus dados estarão sempre protegidos.",
     },
   ];
 
@@ -81,51 +80,72 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   });
                 },
                 itemBuilder: (context, index) {
+                  final page = onboardingData[index];
+                  final isLast = index == onboardingData.length - 1;
+
                   return Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          onboardingData[index]["image"]!,
-                          width: 120,
-                          height: 120,
-                        ),
-                        const SizedBox(height: 30),
-                        Text(
-                          onboardingData[index]["title"]!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'RozhaOne',
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          onboardingData[index]["description"]!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                        if (index == 2)
-                          const Padding(
-                            padding: EdgeInsets.only(top: 20),
-                            child: Text(
-                              'Não se preocupe — sua privacidade é importante para nós, e seus dados estarão sempre protegidos.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  );
+  padding: const EdgeInsets.all(32.0),
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      if (isLast)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30),
+          child: Image.asset(
+            'assets/images/recycle.png',
+            width: 80,
+            height: 80,
+          ),
+        ),
+
+      // Retângulo de fundo com textos
+      Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: const Color(0xFF3D5718), // cor do retângulo
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              page['title']!,
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'RozhaOne',
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 25),
+            Text(
+              page['text']!,
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+              ),
+            ),
+            if (isLast && page.containsKey('privacy')) ...[
+              const SizedBox(height: 25),
+              Text(
+                page['privacy']!,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white.withValues(alpha: 0.8),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    ],
+  ),
+);
+
                 },
               ),
             ),
@@ -141,7 +161,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   width: 10,
                   height: 10,
                   decoration: BoxDecoration(
-                    color: _currentPage == index ? Colors.white : Colors.white38,
+                    color:
+                        _currentPage == index ? Colors.white : Colors.white38,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -151,9 +172,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: 20),
 
             // Botão "Continuar" apenas na última página
-            if (_currentPage == 2)
+            if (_currentPage == onboardingData.length - 1)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(

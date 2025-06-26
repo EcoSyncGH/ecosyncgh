@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -10,157 +8,164 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-
-  bool isPasswordVisible = false;
-  bool isConfirmPasswordVisible = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF3D5718),
+      backgroundColor: const Color(0xFF60882C),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Ícone
-                Image.asset(
-                  'assets/images/lixeira.png',
-                  width: 100,
-                  height: 100,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
+          child: Column(
+            children: [
+              SizedBox(height: screenHeight * 0.04),
+              Image.asset(
+                'assets/images/lixeira.png',
+                height: screenHeight * 0.13,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Crie sua conta:',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Rozha One',
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-
-                const SizedBox(height: 20),
-
-                // Título
-                const Text(
-                  'Crie sua conta:',
+              ),
+              const SizedBox(height: 24),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                decoration: BoxDecoration(
+                  color: const Color(0x9D9DB577),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE6F5C8),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: const TextField(
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.person),
+                          hintText: 'Nome',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE6F5C8),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: const TextField(
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.email),
+                          hintText: 'E-mail',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE6F5C8),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: TextField(
+                        obscureText: _obscurePassword,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.vpn_key),
+                          hintText: 'Senha',
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                            borderSide: BorderSide.none,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE6F5C8),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: TextField(
+                        obscureText: _obscureConfirmPassword,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.vpn_key),
+                          hintText: 'Confirmar Senha',
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                            borderSide: BorderSide.none,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureConfirmPassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscureConfirmPassword = !_obscureConfirmPassword;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF80B142),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.3, vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: const Text(
+                  'Sign up',
                   style: TextStyle(
-                    fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'RozhaOne',
+                    fontSize: 16,
                     color: Colors.white,
                   ),
                 ),
-
-                const SizedBox(height: 40),
-
-                // Nome
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.person),
-                    hintText: 'Nome',
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // E-mail
-                TextField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.email),
-                    hintText: 'Email',
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Senha
-                TextField(
-                  controller: passwordController,
-                  obscureText: !isPasswordVisible,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.vpn_key),
-                    hintText: 'Senha',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isPasswordVisible = !isPasswordVisible;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Confirmar senha
-                TextField(
-                  controller: confirmPasswordController,
-                  obscureText: !isConfirmPasswordVisible,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.vpn_key),
-                    hintText: 'Confirmar senha',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isConfirmPasswordVisible = !isConfirmPasswordVisible;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 30),
-
-                // Botão Sign up
-SizedBox(
-  width: double.infinity,
-  child: ElevatedButton(
-    onPressed: () {
-      // lógica de cadastro
-    },
-    style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFF678E35),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 16),
-    ),
-    child: const Text(
-      'Sign up',
-      style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        color: Colors.white,
-      ),
-    ),
-  ),
-),
-
-const SizedBox(height: 16),
-
-// Botão de voltar para login
-TextButton(
-  onPressed: () {
-    Navigator.pop(context);
-  },
-  child: const Text(
-    'Já tem uma conta? Entrar',
-    style: TextStyle(
-      decoration: TextDecoration.underline,
-      fontSize: 16,
-      color: Colors.white,
-    ),
-  ),
-),
-
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
