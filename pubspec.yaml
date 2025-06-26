@@ -23,6 +23,7 @@ flutter:
 
   assets:
     - assets/images/lixeira.png
+    - assets/images/recycle.png
 
   fonts:
     - family: RozhaOne
