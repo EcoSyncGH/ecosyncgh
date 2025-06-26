@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
+import 'onboarding_screen.dart';
+
 
 
 class LoginScreen extends StatefulWidget {
@@ -51,8 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Campo de e-mail
                 TextField(
                   controller: emailController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.email),
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.email),
                     hintText: 'Email',
                   ),
                 ),
@@ -86,7 +88,10 @@ SizedBox(
   width: double.infinity,
   child: ElevatedButton(
     onPressed: () {
-      // lógica de login
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+      );
     },
     style: ElevatedButton.styleFrom(
       backgroundColor: const Color(0xFF678E35),
