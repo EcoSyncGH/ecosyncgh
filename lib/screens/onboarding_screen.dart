@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'login_screen.dart';
+import 'main_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -41,7 +42,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (status.isGranted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
     } else if (status.isDenied || status.isRestricted || status.isLimited) {
       final result = await Permission.location.request();
