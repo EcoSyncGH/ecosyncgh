@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF60882C),
+      backgroundColor: const Color(0xFFC7DEA6),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
@@ -41,8 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'Rozha One',
-                  color: Colors.white,
+                  fontFamily: 'RozhaOne',
+                  color: Color(0xFF3D5718),
                 ),
               ),
               const SizedBox(height: 24),
@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   'É sua primeira vez? Clique aqui',
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.white,
+                    color: Color(0xFF3D5718),
                     decoration: TextDecoration.none,
                   ),
                 ),

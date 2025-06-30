@@ -17,7 +17,7 @@ class _SignupScreenState extends State<SignupScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF60882C),
+      backgroundColor: const Color(0xFFC7DEA6),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
@@ -33,9 +33,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 'Crie sua conta:',
                 style: TextStyle(
                   fontSize: 24,
-                  fontFamily: 'Rozha One',
+                  fontFamily: 'RozhaOne',
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Color(0xFF3D5718),
                 ),
               ),
               const SizedBox(height: 24),

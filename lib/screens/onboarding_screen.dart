@@ -66,7 +66,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF678E35),
+      backgroundColor: const Color(0xFFC7DEA6),
       body: SafeArea(
         child: Column(
           children: [
@@ -94,8 +94,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           padding: const EdgeInsets.only(bottom: 30),
           child: Image.asset(
             'assets/images/recycle.png',
-            width: 80,
-            height: 80,
+            width: 122,
+            height: 133,
           ),
         ),
 
@@ -103,7 +103,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: const Color(0xFF3D5718), // cor do retângulo
+          color: const Color(0xFF678E35), // cor do retângulo
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -150,6 +150,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
 
+if (_currentPage == onboardingData.length - 1)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _requestLocation,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF80B142),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: const Text(
+                      'Continuar',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+            const SizedBox(height: 10),
+
             // Indicadores de página
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -172,34 +201,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: 20),
 
             // Botão "Continuar" apenas na última página
-            if (_currentPage == onboardingData.length - 1)
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _requestLocation,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC7DEA6),
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text(
-                      'Continuar',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-            const SizedBox(height: 10),
+            
           ],
         ),
       ),
