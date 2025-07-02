@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ecosyncgh/services/ecoponto_service.dart';
 import 'package:ecosyncgh/models/ecoponto.dart';
+import 'ecoponto_map_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,10 +20,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<String> _chipLabels = [
     "Todos",
-    "Plástico",
-    "Metal",
-    "Vidro",
-    "Papel",
+    "Baterias",
+    "Garrafas de vidro",
+    "Eletrônicos",
+    "Cartuchos de tinta",
+    "Latas de metal",
+    "Lâmpadas",
+    "Sacos plásticos",
+    "Roupas",
+    "Garrafas plásticas",
   ];
 
   List<Ecoponto> _allEcopontos = [];
@@ -57,12 +64,42 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       _filteredEcopontos = _allEcopontos.where((e) {
-        final matchesMaterial = selectedMaterial == "Todos" || e.materiais.contains(selectedMaterial);
-        final matchesSearch = _searchQuery.isEmpty || e.nome.toLowerCase().contains(_searchQuery);
+        final matchesMaterial =
+            selectedMaterial == "Todos" ||
+            e.materiais.contains(selectedMaterial);
+        final matchesSearch =
+            _searchQuery.isEmpty || e.nome.toLowerCase().contains(_searchQuery);
         return matchesMaterial && matchesSearch;
       }).toList();
     });
   }
+
+  Future<void> _openMaps(Ecoponto ecoponto) async {
+  String url;
+
+  if (ecoponto.placeId != null && ecoponto.placeId!.isNotEmpty) {
+    url = 'https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${ecoponto.placeId}';
+  } else if (ecoponto.latitude != null && ecoponto.longitude != null) {
+    url = 'https://www.google.com/maps/search/?api=1&query=${ecoponto.latitude},${ecoponto.longitude}';
+  } else {
+    final query = Uri.encodeComponent(
+      '${ecoponto.nome}, ${ecoponto.endereco}, Fortaleza, Ceará',
+    );
+    url = 'https://www.google.com/maps/search/?api=1&query=$query';
+  }
+
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  } else {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Não foi possível abrir o Maps.')),
+    );
+  }
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         borderSide: BorderSide.none,
                                       ),
-                                      contentPadding: EdgeInsets.symmetric(vertical: 14),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -181,72 +220,89 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 )
                               : ListView.builder(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
                                   scrollDirection: Axis.horizontal,
                                   itemCount: _filteredEcopontos.length,
                                   itemBuilder: (context, index) {
                                     final ecoponto = _filteredEcopontos[index];
-                                    return Container(
-                                      width: 220,
-                                      margin: const EdgeInsets.only(right: 16),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        image: const DecorationImage(
-                                          image: AssetImage('assets/images/placeholder.jpg'),
-                                          fit: BoxFit.cover,
+                                    return GestureDetector(
+                                      onTap: () => _openMaps(ecoponto),
+                                      child: Container(
+                                        width: 220,
+                                        margin:
+                                            const EdgeInsets.only(right: 16),
+                                        clipBehavior: Clip.hardEdge,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
                                         ),
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              height: 60,
-                                              decoration: const BoxDecoration(
-                                                borderRadius: BorderRadius.vertical(
-                                                  bottom: Radius.circular(16),
+                                        child: Stack(
+                                          fit: StackFit.expand,
+                                          children: [
+                                            // Imagem preenchendo tudo
+                                            (ecoponto.imagem != null &&
+                                                    ecoponto.imagem!.isNotEmpty)
+                                                ? Image.network(
+                                                    ecoponto.imagem!,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.asset(
+                                                    'assets/images/placeholder.jpg',
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                            // Gradiente escuro embaixo
+                                            Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: Container(
+                                                height: 60,
+                                                decoration:
+                                                    const BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    begin: Alignment.topCenter,
+                                                    end: Alignment.bottomCenter,
+                                                    colors: [
+                                                      Colors.transparent,
+                                                      Colors.black54,
+                                                    ],
+                                                  ),
                                                 ),
-                                                gradient: LinearGradient(
-                                                  begin: Alignment.topCenter,
-                                                  end: Alignment.bottomCenter,
-                                                  colors: [
-                                                    Colors.transparent,
-                                                    Colors.black54,
-                                                  ],
+                                              ),
+                                            ),
+                                            // Nome
+                                            Positioned(
+                                              left: 8,
+                                              bottom: 28,
+                                              right: 8,
+                                              child: Text(
+                                                ecoponto.nome,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
                                                 ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
-                                          ),
-                                          Positioned(
-                                            left: 8,
-                                            bottom: 28,
-                                            right: 8,
-                                            child: Text(
-                                              ecoponto.nome,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
+                                            // Horário
+                                            Positioned(
+                                              left: 8,
+                                              bottom: 8,
+                                              right: 8,
+                                              child: Text(
+                                                ecoponto.horario,
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white70,
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                          ),
-                                          Positioned(
-                                            left: 8,
-                                            bottom: 8,
-                                            right: 8,
-                                            child: Text(
-                                              ecoponto.horario,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white70,
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },
@@ -262,9 +318,18 @@ class _HomeScreenState extends State<HomeScreen> {
         indicatorColor: Colors.white,
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const EcopontoMapScreen(),
+              ),
+            );
+          } else {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }
         },
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: "Início"),

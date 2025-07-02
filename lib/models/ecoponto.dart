@@ -4,6 +4,10 @@ class Ecoponto {
   final String endereco;
   final List<String> materiais;
   final String horario;
+  final String? imagem;
+  final String? placeId;
+  double? latitude;
+  double? longitude;
 
   Ecoponto({
     required this.id,
@@ -11,6 +15,10 @@ class Ecoponto {
     required this.endereco,
     required this.materiais,
     required this.horario,
+    this.imagem,
+    this.placeId,
+    this.latitude,
+    this.longitude,
   });
 
   factory Ecoponto.fromJson(Map<String, dynamic> json) {
@@ -20,6 +28,10 @@ class Ecoponto {
       endereco: json['endereco'],
       materiais: List<String>.from(json['materiais']),
       horario: json['horario'],
+      imagem: json['imagem'],
+      placeId: json['place_id'],
+      latitude: json['latitude']?.toDouble(),
+      longitude: json['longitude']?.toDouble(),
     );
   }
 }
