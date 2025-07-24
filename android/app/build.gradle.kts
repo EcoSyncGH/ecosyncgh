@@ -29,7 +29,12 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        resValue("string", "google_maps_key", project.findProperty("MAPS_API_KEY") as String? ?: "")
+        resValue(
+            "string",
+            "google_maps_key",
+            project.findProperty("MAPS_API_KEY") as String? ?: ""
+        )
+
     }
 
     buildTypes {

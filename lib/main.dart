@@ -3,7 +3,7 @@ import 'theme.dart';
 import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/onboarding_screen.dart';
-import 'screens/main_screen.dart';
+import 'screens/main_screen.dart'; // Importa MainScreen corretamente
 
 void main() {
   runApp(const EcoSyncApp());
@@ -23,7 +23,7 @@ class EcoSyncApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const SignupScreen(),
         '/onboarding': (context) => const OnboardingScreen(),
-        '/home': (context) => const HomeScreen(), // <-- tela com navbar
+        '/home': (context) => const MainScreen(), // 🚀 AGORA CORRETO
       },
     );
   }
