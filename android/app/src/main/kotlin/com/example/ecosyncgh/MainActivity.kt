@@ -1,4 +1,4 @@
-package com.example.ecosyncgh  // Use o mesmo package do seu AndroidManifest
+package com.ecosyncgh.app  // Use o mesmo package do seu AndroidManifest
 
 import io.flutter.embedding.android.FlutterActivity
 

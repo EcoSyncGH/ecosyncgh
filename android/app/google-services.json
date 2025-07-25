@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "624255778570",
+    "project_id": "ecosync-app",
+    "storage_bucket": "ecosync-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624255778570:android:e93725e3b56c9c6f8a84f3",
+        "android_client_info": {
+          "package_name": "com.ecosyncgh.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7fvMoppBsM1vK5Yrkv2Z2R9H2icG7__M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624255778570:android:d9b47884c6bcee728a84f3",
+        "android_client_info": {
+          "package_name": "com.example.ecosyncgh"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7fvMoppBsM1vK5Yrkv2Z2R9H2icG7__M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

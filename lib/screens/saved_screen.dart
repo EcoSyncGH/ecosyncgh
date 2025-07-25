@@ -1,205 +1,133 @@
 import 'package:flutter/material.dart';
-import 'package:ecosyncgh/services/favorites_manager.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../models/ecoponto.dart';
+import '../providers/favorites_provider.dart';
 
-class SavedScreen extends StatefulWidget {
+class SavedScreen extends StatelessWidget {
   const SavedScreen({super.key});
 
-  @override
-  State<SavedScreen> createState() => _SavedScreenState();
-}
+  Future<void> _openMaps(BuildContext context, Ecoponto ecoponto) async {
+    String url;
 
-class _SavedScreenState extends State<SavedScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = "";
-  final List<String> _chipLabels = [
-    "Baterias",
-    "Garrafas de vidro",
-    "Eletrônicos",
-    "Cartuchos de tinta",
-    "Latas de metal",
-    "Lâmpadas",
-    "Sacos plásticos",
-    "Roupas",
-    "Garrafas plásticas",
-  ];
-  Set<int> _selectedChipIndices = {};
+    if (ecoponto.placeId != null && ecoponto.placeId!.isNotEmpty) {
+      url = 'https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${ecoponto.placeId}';
+    } else if (ecoponto.latitude != null && ecoponto.longitude != null) {
+      url = 'https://www.google.com/maps/search/?api=1&query=${ecoponto.latitude},${ecoponto.longitude}';
+    } else {
+      final query = Uri.encodeComponent('${ecoponto.nome}, ${ecoponto.endereco}, Fortaleza, Ceará');
+      url = 'https://www.google.com/maps/search/?api=1&query=$query';
+    }
 
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(() {
-      setState(() {
-        _searchQuery = _searchController.text.trim().toLowerCase();
-      });
-    });
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Não foi possível abrir o Maps.')),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Filtra favoritos pelo nome e chips
-    final filteredFavorites = FavoritesManager.favorites.where((e) {
-      final matchesSearch = _searchQuery.isEmpty || e.nome.toLowerCase().contains(_searchQuery);
-      if (_selectedChipIndices.isEmpty) return matchesSearch;
-
-      final selectedMaterials = _selectedChipIndices.map((i) => _chipLabels[i]);
-      final matchesMaterial = e.materiais.any(selectedMaterials.contains);
-      return matchesSearch && matchesMaterial;
-    }).toList();
-
     return Scaffold(
       backgroundColor: const Color(0xFFC7DEA6),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Título
-            const Padding(
-              padding: EdgeInsets.only(top: 16),
-              child: Center(
-                child: Text(
-                  "Salvos",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'RozhaOne',
-                    color: Color(0xFF678E35),
-                  ),
-                ),
+      appBar: AppBar(
+        title: const Text(
+          "Ecopontos Salvos",
+          style: TextStyle(
+            fontFamily: 'RozhaOne',
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xFFA1BD79),
+        centerTitle: true,
+      ),
+      body: Consumer<FavoritesProvider>(
+        builder: (context, favoritesProvider, child) {
+          final savedEcopontos = favoritesProvider.favorites;
+
+          if (savedEcopontos.isEmpty) {
+            return const Center(
+              child: Text(
+                "Nenhum ecoponto salvo ainda.",
+                style: TextStyle(fontSize: 16),
               ),
-            ),
-            // Barra de pesquisa
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Container(
-                height: 45,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: savedEcopontos.length,
+            padding: const EdgeInsets.all(12),
+            itemBuilder: (context, index) {
+              final ecoponto = savedEcopontos[index];
+
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: const InputDecoration(
-                    hintText: "Procure...",
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 14),
-                  ),
-                ),
-              ),
-            ),
-            // Chips de filtros
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
-              child: SizedBox(
-                height: 40,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _chipLabels.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
-                  itemBuilder: (context, index) {
-                    final isSelected = _selectedChipIndices.contains(index);
-                    return FilterChip(
-                      label: Text(_chipLabels[index]),
-                      selected: isSelected,
-                      onSelected: (selected) {
-                        setState(() {
-                          if (selected) {
-                            _selectedChipIndices.add(index);
-                          } else {
-                            _selectedChipIndices.remove(index);
-                          }
-                        });
-                      },
-                      selectedColor: Colors.white,
-                      backgroundColor: const Color(0xFFC7DEA6),
-                      shape: StadiumBorder(
-                        side: BorderSide(
-                          color: Colors.black.withAlpha(50),
-                        ),
-                      ),
-                      labelStyle: TextStyle(
-                        color: isSelected ? Colors.black : Colors.black87,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Grade de favoritos
-            Expanded(
-              child: filteredFavorites.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'Nenhum item salvo.',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    )
-                  : GridView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 1,
-                      ),
-                      itemCount: filteredFavorites.length,
-                      itemBuilder: (context, index) {
-                        final ecoponto = filteredFavorites[index];
-                        return GestureDetector(
-                          onTap: () {
-                            // Remover ao tocar
-                            setState(() {
-                              FavoritesManager.remove(ecoponto);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('${ecoponto.nome} removido dos favoritos.'),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: .4),
-                              borderRadius: BorderRadius.circular(16),
+                elevation: 3,
+                child: Column(
+                  children: [
+                    ecoponto.imagem != null && ecoponto.imagem!.isNotEmpty
+                        ? ClipRRect(
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                            child: Image.network(
+                              ecoponto.imagem!,
+                              height: 160,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                (ecoponto.imagem != null && ecoponto.imagem!.isNotEmpty)
-                                    ? Image.network(
-                                        ecoponto.imagem!,
-                                        height: 60,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : const Icon(
-                                        Icons.image_not_supported,
-                                        size: 48,
-                                        color: Colors.black45,
-                                      ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  ecoponto.nome,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  ecoponto.horario,
-                                  style: const TextStyle(fontSize: 12, color: Colors.black54),
-                                ),
-                              ],
+                          )
+                        : ClipRRect(
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                            child: Image.asset(
+                              'assets/images/placeholder.jpg',
+                              height: 160,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        );
-                      },
+                    ListTile(
+                      title: Text(
+                        ecoponto.nome,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(ecoponto.endereco),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete_outline, color: Colors.red),
+                        onPressed: () {
+                          favoritesProvider.toggleFavorite(ecoponto);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${ecoponto.nome} removido dos favoritos.'),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                      ),
+                      onTap: () => _openMaps(context, ecoponto),
                     ),
-            ),
-          ],
-        ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, bottom: 12),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.access_time, size: 18),
+                          const SizedBox(width: 4),
+                          Text(ecoponto.horario),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

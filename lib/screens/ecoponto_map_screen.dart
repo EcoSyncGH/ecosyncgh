@@ -33,7 +33,6 @@ class _EcopontoMapScreenState extends State<EcopontoMapScreen> {
       ecoponto.latitude = locations.first.latitude;
       ecoponto.longitude = locations.first.longitude;
     } else {
-      print("Nenhuma localização encontrada para ${ecoponto.nome}");
     }
   } catch (e) {
     debugPrint("Erro ao geocodificar: $e");
